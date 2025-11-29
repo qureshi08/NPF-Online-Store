@@ -1,8 +1,9 @@
-from flask import render_template, session, redirect, url_for, request, flash
+from flask import render_template, session, redirect, url_for, request, flash, jsonify, current_app
 from app.cart import bp
 from app.models import Product, Order, OrderItem
 from app import db
 from flask_login import current_user
+import stripe
 
 @bp.route('/')
 def index():
@@ -47,6 +48,33 @@ def remove_from_cart(product_id):
         del cart[str(product_id)]
         session['cart'] = cart
     return redirect(url_for('cart.index'))
+
+@bp.route('/create-payment-intent', methods=['POST'])
+def create_payment_intent():
+    try:
+        stripe.api_key = current_app.config['STRIPE_SECRET_KEY']
+        
+        cart = session.get('cart', {})
+        total_price = 0
+        for product_id, quantity in cart.items():
+            product = Product.query.get(product_id)
+            if product:
+                total_price += product.price * quantity
+        
+        # Stripe expects amount in cents
+        amount = int(total_price * 100)
+        
+        intent = stripe.PaymentIntent.create(
+            amount=amount,
+            currency='pkr',  # Pakistani Rupee
+            metadata={'integration_check': 'accept_a_payment'},
+        )
+        
+        return jsonify({
+            'clientSecret': intent['client_secret']
+        })
+    except Exception as e:
+        return jsonify(error=str(e)), 403
 
 @bp.route('/checkout', methods=['GET', 'POST'])
 def checkout():
@@ -103,7 +131,9 @@ def checkout():
         if product:
             total_price += product.price * quantity
             
-    return render_template('cart/checkout.html', total_price=total_price)
+    return render_template('cart/checkout.html', 
+                         total_price=total_price,
+                         stripe_public_key=current_app.config['STRIPE_PUBLIC_KEY'])
 
 @bp.route('/confirmation/<int:order_id>')
 def confirmation(order_id):

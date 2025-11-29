@@ -5,6 +5,7 @@ Flask-Login
 Flask-WTF
 email_validator
 python-dotenv
+stripe
 psycopg2-binary
 cloudinary
 gunicorn

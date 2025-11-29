@@ -39,22 +39,39 @@
                             <div class="mb-4">
                                 <div class="form-check p-3 border rounded-4 mb-2 bg-light">
                                     <input class="form-check-input" type="radio" name="payment_method" id="cod"
-                                        value="Cash on Delivery" checked>
+                                        value="Cash on Delivery" checked onclick="togglePaymentMethod('cod')">
                                     <label class="form-check-label w-100 fw-bold" for="cod">
                                         <i class="fas fa-money-bill-wave me-2 text-success"></i>Cash on Delivery
                                     </label>
                                 </div>
-                                <div class="form-check p-3 border rounded-4">
+                                <div class="form-check p-3 border rounded-4 mb-2">
                                     <input class="form-check-input" type="radio" name="payment_method" id="bank"
-                                        value="Bank Transfer">
+                                        value="Bank Transfer" onclick="togglePaymentMethod('bank')">
                                     <label class="form-check-label w-100 fw-bold" for="bank">
                                         <i class="fas fa-university me-2 text-primary"></i>Bank Transfer
                                     </label>
                                 </div>
+                                <div class="form-check p-3 border rounded-4">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="card"
+                                        value="Credit/Debit Card" onclick="togglePaymentMethod('card')">
+                                    <label class="form-check-label w-100 fw-bold" for="card">
+                                        <i class="fas fa-credit-card me-2 text-info"></i>Credit/Debit Card
+                                    </label>
+                                </div>
+
+                                <!-- Stripe Card Element (Hidden by default) -->
+                                <div id="card-element-container" class="mt-3 p-3 border rounded-4 bg-white"
+                                    style="display: none;">
+                                    <div id="card-element" class="form-control"></div>
+                                    <div id="card-errors" class="text-danger small mt-2"></div>
+                                </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm mt-3">Place
-                                Order</button>
+                            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm mt-3"
+                                id="submit-button">
+                                <span id="button-text">Place Order</span>
+                                <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -69,8 +86,6 @@
                             <span class="badge bg-primary rounded-pill">{{ session.get('cart')|length }}</span>
                         </h4>
                         <ul class="list-group list-group-flush mb-3 rounded-4 overflow-hidden">
-                            <!-- We don't have product details here easily without passing them, 
-                                 so we'll just show the total. Ideally, pass cart items to template. -->
                             <li class="list-group-item d-flex justify-content-between lh-sm p-3">
                                 <div>
                                     <h6 class="my-0">Total Amount</h6>
@@ -89,4 +104,86 @@
         </div>
     </div>
 </div>
+
+{% if stripe_public_key %}
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    const stripe = Stripe('{{ stripe_public_key }}');
+    const elements = stripe.elements();
+    const cardElement = elements.create('card', {
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+            }
+        }
+    });
+
+    let currentPaymentMethod = 'cod';
+
+    function togglePaymentMethod(method) {
+        currentPaymentMethod = method;
+        const cardContainer = document.getElementById('card-element-container');
+
+        if (method === 'card') {
+            cardContainer.style.display = 'block';
+            cardElement.mount('#card-element');
+        } else {
+            cardContainer.style.display = 'none';
+            if (cardElement._parent) {
+                cardElement.unmount();
+            }
+        }
+    }
+
+    const form = document.getElementById('checkoutForm');
+    const submitButton = document.getElementById('submit-button');
+    const buttonText = document.getElementById('button-text');
+    const spinner = document.getElementById('spinner');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (currentPaymentMethod === 'card') {
+            // Handle Stripe payment
+            submitButton.disabled = true;
+            buttonText.classList.add('d-none');
+            spinner.classList.remove('d-none');
+
+            try {
+                const response = await fetch('{{ url_for("cart.create_payment_intent") }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const { clientSecret } = await response.json();
+
+                const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement
+                    }
+                });
+
+                if (error) {
+                    document.getElementById('card-errors').textContent = error.message;
+                    submitButton.disabled = false;
+                    buttonText.classList.remove('d-none');
+                    spinner.classList.add('d-none');
+                } else if (paymentIntent.status === 'succeeded') {
+                    // Payment successful, submit the form
+                    form.submit();
+                }
+            } catch (err) {
+                console.error(err);
+                submitButton.disabled = false;
+                buttonText.classList.remove('d-none');
+                spinner.classList.add('d-none');
+            }
+        } else {
+            // For COD and Bank Transfer, just submit the form
+            form.submit();
+        }
+    });
+</script>
+{% endif %}
 {% endblock %}
