@@ -2,7 +2,7 @@
 set -e
 
 echo "Running database migrations..."
-flask db upgrade
+python -m flask db upgrade
 
 echo "Starting gunicorn server..."
-exec gunicorn run:app
+exec gunicorn run:app --preload
