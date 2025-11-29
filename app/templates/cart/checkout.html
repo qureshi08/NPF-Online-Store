@@ -1,31 +1,92 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Checkout</h2>
-<div class="row">
-    <div class="col-md-6">
-        <h4>Order Summary</h4>
-        <p>Total: <strong>${{ total_price }}</strong></p>
-    </div>
-    <div class="col-md-6">
-        <h4>Shipping Information</h4>
-        <form action="" method="post">
-            {% if not current_user.is_authenticated %}
-            <div class="mb-3">
-                <label for="email" class="form-label">Email Address</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            {% else %}
-            <p>Logged in as: {{ current_user.email }}</p>
-            {% endif %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4 fw-bold text-center" data-aos="fade-down">Checkout</h2>
 
-            <div class="mb-3">
-                <label for="address" class="form-label">Shipping Address</label>
-                <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+        <div class="row g-4">
+            <!-- Checkout Form -->
+            <div class="col-md-7 order-md-1">
+                <div class="card border-0 shadow-sm rounded-4 h-100" data-aos="fade-right">
+                    <div class="card-body p-4">
+                        <h4 class="mb-4 fw-bold"><i class="fas fa-shipping-fast me-2 text-primary-custom"></i>Shipping
+                            Details</h4>
+                        <form action="" method="post" id="checkoutForm">
+                            {% if not current_user.is_authenticated %}
+                            <div class="mb-3">
+                                <label for="email" class="form-label fw-bold small text-uppercase text-muted">Email
+                                    Address</label>
+                                <input type="email" class="form-control rounded-pill" id="email" name="email"
+                                    placeholder="you@example.com" required>
+                            </div>
+                            {% else %}
+                            <div class="mb-3 p-3 bg-light rounded-4">
+                                <small class="text-uppercase text-muted fw-bold">Logged in as</small>
+                                <div class="fw-bold">{{ current_user.email }}</div>
+                            </div>
+                            {% endif %}
+
+                            <div class="mb-4">
+                                <label for="address" class="form-label fw-bold small text-uppercase text-muted">Shipping
+                                    Address</label>
+                                <textarea class="form-control rounded-4" id="address" name="address" rows="3"
+                                    placeholder="123 Main St, City, Country" required></textarea>
+                            </div>
+
+                            <h4 class="mb-3 fw-bold mt-5"><i
+                                    class="fas fa-credit-card me-2 text-primary-custom"></i>Payment Method</h4>
+                            <div class="mb-4">
+                                <div class="form-check p-3 border rounded-4 mb-2 bg-light">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="cod"
+                                        value="Cash on Delivery" checked>
+                                    <label class="form-check-label w-100 fw-bold" for="cod">
+                                        <i class="fas fa-money-bill-wave me-2 text-success"></i>Cash on Delivery
+                                    </label>
+                                </div>
+                                <div class="form-check p-3 border rounded-4">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="bank"
+                                        value="Bank Transfer">
+                                    <label class="form-check-label w-100 fw-bold" for="bank">
+                                        <i class="fas fa-university me-2 text-primary"></i>Bank Transfer
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm mt-3">Place
+                                Order</button>
+                        </form>
+                    </div>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-lg w-100">Place Order</button>
-        </form>
+            <!-- Order Summary -->
+            <div class="col-md-5 order-md-2">
+                <div class="card border-0 shadow-sm rounded-4 bg-light" data-aos="fade-left">
+                    <div class="card-body p-4">
+                        <h4 class="d-flex justify-content-between align-items-center mb-4">
+                            <span class="fw-bold text-primary-custom">Your Cart</span>
+                            <span class="badge bg-primary rounded-pill">{{ session.get('cart')|length }}</span>
+                        </h4>
+                        <ul class="list-group list-group-flush mb-3 rounded-4 overflow-hidden">
+                            <!-- We don't have product details here easily without passing them, 
+                                 so we'll just show the total. Ideally, pass cart items to template. -->
+                            <li class="list-group-item d-flex justify-content-between lh-sm p-3">
+                                <div>
+                                    <h6 class="my-0">Total Amount</h6>
+                                    <small class="text-muted">Including taxes</small>
+                                </div>
+                                <span class="text-muted fw-bold">Rs. {{ "{:,}".format(total_price|int) }}</span>
+                            </li>
+                        </ul>
+
+                        <div class="alert alert-info border-0 rounded-4 small">
+                            <i class="fas fa-info-circle me-2"></i>Free shipping on all orders!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

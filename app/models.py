@@ -64,6 +64,7 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True) # Nullable for guest checkout
     guest_email = db.Column(db.String(120))
     status = db.Column(db.String(20), default='Pending')
+    payment_method = db.Column(db.String(50), default='Cash on Delivery')
     total_price = db.Column(db.Float)
     created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     items = db.relationship('OrderItem', backref='order', lazy='dynamic')

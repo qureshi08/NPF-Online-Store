@@ -61,11 +61,14 @@ def checkout():
             flash('Please provide an email address.')
             return redirect(url_for('cart.checkout'))
             
+        payment_method = request.form.get('payment_method', 'Cash on Delivery')
+        
         order = Order(
             user_id=current_user.id if current_user.is_authenticated else None,
             guest_email=email if not current_user.is_authenticated else current_user.email,
             total_price=0,
-            status='Pending'
+            status='Pending',
+            payment_method=payment_method
         )
         db.session.add(order)
         db.session.commit() # Commit to get ID
