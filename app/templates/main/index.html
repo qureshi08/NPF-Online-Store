@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="p-5 mb-4 bg-light rounded-3">
+<div class="p-5 mb-4 bg-light rounded-3 hero-section">
     <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold">Welcome to NPF Online Store</h1>
         <p class="col-md-8 fs-4">Premium furniture for your home and office. Browse our collection today.</p>
@@ -14,38 +14,19 @@
     {% for product in featured_products %}
     <div class="col">
         <div class="card h-100">
-            {% extends "base.html" %}
-
-            {% block content %}
-            <div class="p-5 mb-4 bg-light rounded-3">
-                <div class="container-fluid py-5">
-                    <h1 class="display-5 fw-bold">Welcome to NPF Online Store</h1>
-                    <p class="col-md-8 fs-4">Premium furniture for your home and office. Browse our collection today.
-                    </p>
-                    <a href="{{ url_for('main.shop') }}" class="btn btn-primary btn-lg" type="button">Shop Now</a>
-                </div>
+            {% if product.images.first() %}
+            <img src="{{ product.images.first().image_url }}" class="card-img-top" alt="{{ product.name }}">
+            {% else %}
+            <img src="https://via.placeholder.com/400x300" class="card-img-top" alt="No Image">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="price-tag">Rs. {{ "{:,}".format(product.price|int) }}</p>
+                <a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="btn btn-primary">View
+                    Details</a>
             </div>
-
-            <h2 class="mb-4">Featured Products</h2>
-            <div class="row row-cols-1 row-cols-md-4 g-4">
-                {% for product in featured_products %}
-                <div class="col">
-                    <div class="card h-100">
-                        {% if product.images.first() %}
-                        <img src="{{ product.images.first().image_url }}" class="card-img-top" alt="{{ product.name }}"
-                            style="height: 200px; object-fit: cover;">
-                        {% else %}
-                        <img src="https://via.placeholder.com/200" class="card-img-top" alt="No Image">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ product.name }}</h5>
-                            <p class="price-tag">Rs. {{ "{:,}".format(product.price|int) }}</p>
-                            <a href="{{ url_for('main.product_detail', slug=product.slug) }}"
-                                class="btn btn-primary">View
-                                Details</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            {% endblock %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
