@@ -75,7 +75,7 @@
                         <tr>
                             <td class="ps-4 fw-bold">#{{ order.id }}</td>
                             <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
-                            <td>{{ order.user.username }}</td>
+                            <td>{{ order.user.username if order.user else order.guest_email }}</td>
                             <td>
                                 {% if order.status == 'Pending' %}
                                 <span class="badge bg-warning text-dark rounded-pill">Pending</span>
@@ -109,37 +109,149 @@
             </div>
             <div class="card-body">
                 <canvas id="salesChart"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
+                {% extends "admin/base.html" %}
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const ctx = document.getElementById('salesChart');
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Orders', 'Products', 'Users'],
-            datasets: [{
-                label: 'Count',
-                data: [{{ total_orders }}, {{ total_products }}, {{ total_users }}],
-        backgroundColor: [
-        'rgb(25, 135, 84)',
-        'rgb(13, 202, 240)',
-        'rgb(255, 193, 7)'
-    ],
-        hoverOffset: 4
+                {% block admin_content %}
+                <h2 class="mb-4">Dashboard</h2>
+
+                <!-- Stats Cards -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm rounded-4 bg-primary text-white h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="card-title mb-0 opacity-75">Total Sales</h6>
+                                    <i class="fas fa-wallet fa-lg opacity-75"></i>
+                                </div>
+                                <h3 class="fw-bold mb-0">Rs. {{ "{:,}".format(total_sales|int) }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm rounded-4 bg-success text-white h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="card-title mb-0 opacity-75">Total Orders</h6>
+                                    <i class="fas fa-shopping-bag fa-lg opacity-75"></i>
+                                </div>
+                                <h3 class="fw-bold mb-0">{{ total_orders }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm rounded-4 bg-info text-white h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="card-title mb-0 opacity-75">Products</h6>
+                                    <i class="fas fa-box fa-lg opacity-75"></i>
+                                </div>
+                                <h3 class="fw-bold mb-0">{{ total_products }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm rounded-4 bg-warning text-dark h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="card-title mb-0 opacity-75">Users</h6>
+                                    <i class="fas fa-users fa-lg opacity-75"></i>
+                                </div>
+                                <h3 class="fw-bold mb-0">{{ total_users }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Recent Orders -->
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white border-0 py-3">
+                                <h5 class="mb-0 fw-bold">Recent Orders</h5>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="ps-4">Order ID</th>
+                                            <th>Date</th>
+                                            <th>Customer</th>
+                                            <th>Status</th>
+                                            <th>Total</th>
+                                            <th class="text-end pe-4">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order in recent_orders %}
+                                        <tr>
+                                            <td class="ps-4 fw-bold">#{{ order.id }}</td>
+                                            <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                                            <td>{{ order.user.username if order.user else order.guest_email }}</td>
+                                            <td>
+                                                {% if order.status == 'Pending' %}
+                                                <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                                                {% elif order.status == 'Processing' %}
+                                                <span class="badge bg-info text-dark rounded-pill">Processing</span>
+                                                {% elif order.status == 'Shipped' %}
+                                                <span class="badge bg-primary rounded-pill">Shipped</span>
+                                                {% elif order.status == 'Delivered' %}
+                                                <span class="badge bg-success rounded-pill">Delivered</span>
+                                                {% else %}
+                                                <span class="badge bg-secondary rounded-pill">{{ order.status }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="fw-bold">Rs. {{ "{:,}".format(order.total_price|int) }}</td>
+                                            <td class="text-end pe-4">
+                                                <a href="#" class="btn btn-sm btn-outline-primary rounded-pill">View</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions / Chart Placeholder -->
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm rounded-4 mb-4">
+                            <div class="card-header bg-white border-0 py-3">
+                                <h5 class="mb-0 fw-bold">Sales Overview</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script>
+                    const ctx = document.getElementById('salesChart');
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Orders', 'Products', 'Users'],
+                            datasets: [{
+                                label: 'Count',
+                                data: [{{ total_orders }}, {{ total_products }}, {{ total_users }}],
+                        backgroundColor: [
+                        'rgb(25, 135, 84)',
+                        'rgb(13, 202, 240)',
+                        'rgb(255, 193, 7)'
+                    ],
+                        hoverOffset: 4
             }]
         },
-        options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'bottom',
-            }
-        }
-    }
+                        options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }
     });
-</script>
-{% endblock %}
+                </script>
+
+                {% endblock %}
