@@ -1,10 +1,10 @@
 from flask import render_template, redirect, url_for, flash, request
 from urllib.parse import urlparse
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from app import db
 from app.auth import bp
 from app.auth.forms import LoginForm, RegistrationForm
-from app.models import User
+from app.models import User, Order
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -41,3 +41,9 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', title='Register', form=form)
+
+@bp.route('/orders')
+@login_required
+def orders():
+    orders = current_user.orders.order_by(Order.created_at.desc()).all()
+    return render_template('auth/orders.html', title='My Orders', orders=orders)

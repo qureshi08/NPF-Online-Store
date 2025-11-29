@@ -1,29 +1,164 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6">
-        {% if product.images.first() %}
-        <img src="{{ product.images.first().image_url }}" class="img-fluid rounded" alt="{{ product.name }}">
-        {% else %}
-        <img src="https://via.placeholder.com/500" class="img-fluid rounded" alt="No Image">
-        {% endif %}
+<div class="row g-5 mb-5">
+    <!-- Product Images -->
+    <div class="col-md-6" data-aos="fade-right">
+        <div class="swiper product-swiper rounded-4 overflow-hidden shadow-sm mb-3">
+            <div class="swiper-wrapper">
+                {% if product.images.all() %}
+                {% for image in product.images %}
+                <div class="swiper-slide">
+                    <img src="{{ image.image_url }}" class="w-100 object-fit-cover" style="height: 500px;"
+                        alt="{{ product.name }}">
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="swiper-slide">
+                    <img src="https://via.placeholder.com/600x600" class="w-100 object-fit-cover" style="height: 500px;"
+                        alt="No Image">
+                </div>
+                {% endif %}
+            </div>
+            <div class="swiper-button-next text-white"></div>
+            <div class="swiper-button-prev text-white"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+
+        <!-- Thumbnails (Optional enhancement for later) -->
+        <div class="row g-2">
+            {% for image in product.images %}
+            <div class="col-3">
+                <img src="{{ image.image_url }}"
+                    class="img-fluid rounded cursor-pointer border border-2 border-light hover-border-primary"
+                    style="height: 80px; object-fit: cover;" alt="Thumbnail">
+            </div>
+            {% endfor %}
+        </div>
     </div>
-    <div class="col-md-6">
-        <h1>{{ product.name }}</h1>
-        <h3 class="text-muted">${{ product.price }}</h3>
-        <p class="lead">{{ product.description }}</p>
-        <p>Stock: {{ product.stock }}</p>
+
+    <!-- Product Info -->
+    <div class="col-md-6" data-aos="fade-left">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('main.shop') }}">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+            </ol>
+        </nav>
+
+        <h1 class="display-5 fw-bold mb-2">{{ product.name }}</h1>
+        <div class="mb-3">
+            <span class="text-warning">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                    class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+            </span>
+            <span class="text-muted ms-2">(4.5/5 based on 12 reviews)</span>
+        </div>
+
+        <h2 class="price-tag display-6 mb-4">Rs. {{ "{:,}".format(product.price|int) }}</h2>
+
+        <p class="lead text-muted mb-4">{{ product.description }}</p>
+
+        <div class="mb-4">
+            <h6 class="fw-bold mb-2">Availability:</h6>
+            {% if product.stock > 0 %}
+            <span class="badge bg-success rounded-pill px-3 py-2"><i class="fas fa-check me-1"></i> In Stock ({{
+                product.stock }} available)</span>
+            {% else %}
+            <span class="badge bg-danger rounded-pill px-3 py-2"><i class="fas fa-times me-1"></i> Out of Stock</span>
+            {% endif %}
+        </div>
+
+        <hr class="my-4">
 
         <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="post">
-            <div class="mb-3">
-                <label for="quantity" class="form-label">Quantity</label>
-                <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1"
-                    max="{{ product.stock }}" style="width: 100px;">
+            <div class="row g-3 align-items-end mb-4">
+                <div class="col-md-4">
+                    <label for="quantity" class="form-label fw-bold">Quantity</label>
+                    <div class="input-group">
+                        <button class="btn btn-outline-secondary" type="button" onclick="decrementQty()">-</button>
+                        <input type="number" class="form-control text-center" id="quantity" name="quantity" value="1"
+                            min="1" max="{{ product.stock }}">
+                        <button class="btn btn-outline-secondary" type="button" onclick="incrementQty()">+</button>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill" {% if product.stock==0
+                        %}disabled{% endif %}>
+                        <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                    </button>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-lg" {% if product.stock==0 %}disabled{% endif %}>Add to
-                Cart</button>
         </form>
+
+        <div class="d-flex gap-3">
+            <button class="btn btn-outline-secondary rounded-pill flex-grow-1"><i class="far fa-heart me-2"></i> Add to
+                Wishlist</button>
+            <button class="btn btn-outline-secondary rounded-pill flex-grow-1"><i class="fas fa-share-alt me-2"></i>
+                Share</button>
+        </div>
+
+        <div class="mt-4 p-4 bg-light rounded-4">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-truck text-primary-custom me-3 fa-lg"></i>
+                <div>
+                    <h6 class="mb-0 fw-bold">Free Delivery</h6>
+                    <small class="text-muted">For orders over Rs. 50,000</small>
+                </div>
+            </div>
+            <hr>
+            <div class="d-flex align-items-center">
+                <i class="fas fa-shield-alt text-primary-custom me-3 fa-lg"></i>
+                <div>
+                    <h6 class="mb-0 fw-bold">1 Year Warranty</h6>
+                    <small class="text-muted">Standard warranty included</small>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Related Products (Placeholder logic for now) -->
+<div class="mb-5" data-aos="fade-up">
+    <h3 class="mb-4">You May Also Like</h3>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        <!-- We would ideally pass related_products from the route. For now, we can't easily query here without route change. 
+             So we will skip this or use a placeholder if we had the data. 
+             Let's leave it empty for now or show a message if no related products passed. -->
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var swiper = new Swiper(".product-swiper", {
+        loop: true,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    });
+
+    function incrementQty() {
+        var qtyInput = document.getElementById('quantity');
+        var max = parseInt(qtyInput.getAttribute('max'));
+        var current = parseInt(qtyInput.value);
+        if (current < max) {
+            qtyInput.value = current + 1;
+        }
+    }
+
+    function decrementQty() {
+        var qtyInput = document.getElementById('quantity');
+        var current = parseInt(qtyInput.value);
+        if (current > 1) {
+            qtyInput.value = current - 1;
+        }
+    }
+</script>
 {% endblock %}

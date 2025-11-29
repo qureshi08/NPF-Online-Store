@@ -1,32 +1,115 @@
-{% extends "base.html" %}
-
-{% block content %}
-<div class="p-5 mb-4 bg-light rounded-3 hero-section">
-    <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Welcome to NPF Online Store</h1>
-        <p class="col-md-8 fs-4">Premium furniture for your home and office. Browse our collection today.</p>
-        <a href="{{ url_for('main.shop') }}" class="btn btn-primary btn-lg" type="button">Shop Now</a>
+{% if product.images.first() %}
+<img src="{{ product.images.first().image_url }}" class="card-img-top" alt="{{ product.name }}">
+{% else %}
+<img src="https://via.placeholder.com/400x300" class="card-img-top" alt="No Image">
+{% endif %}
+<div class="card-body">
+    <h5 class="card-title">{{ product.name }}</h5>
+    <p class="price-tag">Rs. {{ "{:,}".format(product.price|int) }}</p>
+    {% if product.images.first() %}
+    <img src="{{ product.images.first().image_url }}" class="card-img-top" alt="{{ product.name }}">
+    {% else %}
+    <img src="https://via.placeholder.com/400x300" class="card-img-top" alt="No Image">
+    {% endif %}
+    <div class="card-body">
+        <h5 class="card-title">{{ product.name }}</h5>
+        <p class="price-tag">Rs. {{ "{:,}".format(product.price|int) }}</p>
+        <a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="btn btn-primary">View
+            Details</a>
     </div>
 </div>
+</div>
+{% endfor %}
+</div>
 
-<h2 class="mb-4">Featured Products</h2>
-<div class="row row-cols-1 row-cols-md-4 g-4">
-    {% for product in featured_products %}
-    <div class="col">
-        <div class="card h-100">
-            {% if product.images.first() %}
-            <img src="{{ product.images.first().image_url }}" class="card-img-top" alt="{{ product.name }}">
-            {% else %}
-            <img src="https://via.placeholder.com/400x300" class="card-img-top" alt="No Image">
-            {% endif %}
-            <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="price-tag">Rs. {{ "{:,}".format(product.price|int) }}</p>
-                <a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="btn btn-primary">View
-                    Details</a>
+<!-- Testimonials Section -->
+<div class="py-5 bg-white rounded-4 my-5 shadow-sm" data-aos="fade-up">
+    <div class="container">
+        <h2 class="text-center mb-5">What Our Customers Say</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm bg-light">
+                    <div class="card-body p-4">
+                        <div class="mb-3 text-warning">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="card-text fst-italic">"Absolutely love my new sofa! The quality is outstanding and
+                            delivery was super fast. Highly recommended!"</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="bg-primary-custom rounded-circle text-white d-flex align-items-center justify-content-center me-3"
+                                style="width: 40px; height: 40px;">S</div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Sarah Ahmed</h6>
+                                <small class="text-muted">Verified Buyer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm bg-light">
+                    <div class="card-body p-4">
+                        <div class="mb-3 text-warning">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p class="card-text fst-italic">"Great selection of office furniture. The ergonomic chair I
+                            bought has changed my work-from-home life."</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="bg-secondary rounded-circle text-white d-flex align-items-center justify-content-center me-3"
+                                style="width: 40px; height: 40px;">O</div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Omar Khan</h6>
+                                <small class="text-muted">Verified Buyer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm bg-light">
+                    <div class="card-body p-4">
+                        <div class="mb-3 text-warning">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="card-text fst-italic">"Beautiful dining set. It fits perfectly in our home. Customer
+                            service was very helpful with my questions."</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="bg-dark rounded-circle text-white d-flex align-items-center justify-content-center me-3"
+                                style="width: 40px; height: 40px;">A</div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Ayesha Malik</h6>
+                                <small class="text-muted">Verified Buyer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    {% endfor %}
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var swiper = new Swiper(".hero-swiper", {
+        loop: true,
+        effect: "fade",
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    });
+</script>
 {% endblock %}

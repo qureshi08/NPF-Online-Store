@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <h2 class="mb-4" data-aos="fade-right">My Orders</h2>
+
+        {% if orders %}
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden" data-aos="fade-up">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="py-3 ps-4">Order ID</th>
+                            <th class="py-3">Date</th>
+                            <th class="py-3">Status</th>
+                            <th class="py-3">Total</th>
+                            <th class="py-3 text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td class="ps-4 fw-bold">#{{ order.id }}</td>
+                            <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                {% if order.status == 'Pending' %}
+                                <span class="badge bg-warning text-dark rounded-pill px-3">Pending</span>
+                                {% elif order.status == 'Processing' %}
+                                <span class="badge bg-info text-dark rounded-pill px-3">Processing</span>
+                                {% elif order.status == 'Shipped' %}
+                                <span class="badge bg-primary rounded-pill px-3">Shipped</span>
+                                {% elif order.status == 'Delivered' %}
+                                <span class="badge bg-success rounded-pill px-3">Delivered</span>
+                                {% else %}
+                                <span class="badge bg-secondary rounded-pill px-3">{{ order.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="fw-bold">Rs. {{ "{:,}".format(order.total_price|int) }}</td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm btn-outline-primary rounded-pill" data-bs-toggle="modal"
+                                    data-bs-target="#orderModal{{ order.id }}">
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Order Details Modal -->
+                        <div class="modal fade" id="orderModal{{ order.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content rounded-4 border-0">
+                                    <div class="modal-header border-0 pb-0">
+                                        <h5 class="modal-title fw-bold">Order Details #{{ order.id }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-4">
+                                        <div class="row mb-4">
+                                            <div class="col-md-6">
+                                                <h6 class="text-muted text-uppercase small fw-bold">Shipping Info</h6>
+                                                <p class="mb-1">{{ current_user.username }}</p>
+                                                <p class="mb-1">{{ current_user.email }}</p>
+                                            </div>
+                                            <div class="col-md-6 text-md-end">
+                                                <h6 class="text-muted text-uppercase small fw-bold">Order Summary</h6>
+                                                <p class="mb-1">Date: {{ order.created_at.strftime('%Y-%m-%d') }}</p>
+                                                <p class="mb-1 fw-bold text-primary-custom">Total: Rs. {{
+                                                    "{:,}".format(order.total_price|int) }}</p>
+                                            </div>
+                                        </div>
+
+                                        <h6 class="text-muted text-uppercase small fw-bold mb-3">Items</h6>
+                                        <div class="list-group list-group-flush border rounded-3">
+                                            {% for item in order.items %}
+                                            <div class="list-group-item p-3 border-0 border-bottom">
+                                                <div class="d-flex align-items-center">
+                                                    {% if item.product.images.first() %}
+                                                    <img src="{{ item.product.images.first().image_url }}"
+                                                        class="rounded me-3"
+                                                        style="width: 60px; height: 60px; object-fit: cover;">
+                                                    {% else %}
+                                                    <img src="https://via.placeholder.com/60" class="rounded me-3"
+                                                        style="width: 60px; height: 60px; object-fit: cover;">
+                                                    {% endif %}
+                                                    <div class="flex-grow-1">
+                                                        <h6 class="mb-0 fw-bold">{{ item.product.name }}</h6>
+                                                        <small class="text-muted">Qty: {{ item.quantity }}</small>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <span class="fw-bold">Rs. {{
+                                                            "{:,}".format(item.price_at_purchase|int) }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-0 pt-0">
+                                        <button type="button" class="btn btn-secondary rounded-pill px-4"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5" data-aos="fade-up">
+            <div class="mb-4 text-muted">
+                <i class="fas fa-shopping-bag fa-4x"></i>
+            </div>
+            <h3>No orders yet</h3>
+            <p class="text-muted mb-4">Looks like you haven't made any purchases yet.</p>
+            <a href="{{ url_for('main.shop') }}" class="btn btn-primary btn-lg rounded-pill px-5">Start Shopping</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
