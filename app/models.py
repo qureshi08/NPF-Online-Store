@@ -77,3 +77,4 @@ class OrderItem(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     quantity = db.Column(db.Integer)
     price_at_purchase = db.Column(db.Float)
+    product = db.relationship('Product', backref='order_items')
