@@ -12,7 +12,7 @@
                     <div class="card-body p-4">
                         <h4 class="mb-4 fw-bold"><i class="fas fa-shipping-fast me-2 text-primary-custom"></i>Shipping
                             Details</h4>
-                        <form action="" method="post" id="checkoutForm">
+                        <form action="" method="post" id="checkoutForm" enctype="multipart/form-data">
                             {% if not current_user.is_authenticated %}
                             <div class="mb-3">
                                 <label for="email" class="form-label fw-bold small text-uppercase text-muted">Email
@@ -39,54 +39,51 @@
                             <div class="mb-4">
                                 <div class="form-check p-3 border rounded-4 mb-2 bg-light">
                                     <input class="form-check-input" type="radio" name="payment_method" id="cod"
-                                        value="Cash on Delivery" checked onclick="togglePaymentInfo('cod')">
+                                        value="Cash on Delivery" checked onclick="togglePaymentUpload('cod')">
                                     <label class="form-check-label w-100 fw-bold" for="cod">
                                         <i class="fas fa-money-bill-wave me-2 text-success"></i>Cash on Delivery
                                     </label>
                                 </div>
                                 <div class="form-check p-3 border rounded-4 mb-2">
                                     <input class="form-check-input" type="radio" name="payment_method" id="jazzcash"
-                                        value="JazzCash/EasyPaisa" onclick="togglePaymentInfo('jazzcash')">
+                                        value="JazzCash/EasyPaisa" onclick="togglePaymentUpload('jazzcash')">
                                     <label class="form-check-label w-100 fw-bold" for="jazzcash">
                                         <i class="fas fa-mobile-alt me-2 text-danger"></i>JazzCash / EasyPaisa
                                     </label>
                                 </div>
                                 <div class="form-check p-3 border rounded-4">
                                     <input class="form-check-input" type="radio" name="payment_method" id="bank"
-                                        value="Bank Transfer" onclick="togglePaymentInfo('bank')">
+                                        value="Bank Transfer" onclick="togglePaymentUpload('bank')">
                                     <label class="form-check-label w-100 fw-bold" for="bank">
                                         <i class="fas fa-university me-2 text-primary"></i>Bank Transfer
                                     </label>
                                 </div>
 
-                                <!-- Payment Instructions (Hidden by default) -->
-                                <div id="payment-info" class="mt-3 p-4 border rounded-4 bg-light"
+                                <!-- Payment Instructions & Upload -->
+                                <div id="payment-upload" class="mt-3 p-4 border rounded-4 bg-light"
                                     style="display: none;">
                                     <div id="jazzcash-info" style="display: none;">
                                         <h6 class="fw-bold mb-3"><i
-                                                class="fas fa-info-circle me-2"></i>JazzCash/EasyPaisa Payment
-                                            Instructions</h6>
+                                                class="fas fa-info-circle me-2"></i>JazzCash/EasyPaisa Payment</h6>
                                         <p class="mb-2"><strong>Account Title:</strong> NPF Online Store</p>
-                                        <p class="mb-2"><strong>JazzCash Number:</strong> 03XX-XXXXXXX</p>
-                                        <p class="mb-2"><strong>EasyPaisa Number:</strong> 03XX-XXXXXXX</p>
-                                        <div class="alert alert-warning border-0 mt-3 small">
-                                            <i class="fas fa-exclamation-triangle me-2"></i>
-                                            After placing order, please send payment screenshot to our WhatsApp:
-                                            <strong>03XX-XXXXXXX</strong>
-                                        </div>
+                                        <p class="mb-2"><strong>JazzCash:</strong> 03XX-XXXXXXX</p>
+                                        <p class="mb-2"><strong>EasyPaisa:</strong> 03XX-XXXXXXX</p>
                                     </div>
                                     <div id="bank-info" style="display: none;">
                                         <h6 class="fw-bold mb-3"><i class="fas fa-info-circle me-2"></i>Bank Transfer
-                                            Instructions</h6>
-                                        <p class="mb-2"><strong>Bank Name:</strong> HBL / Meezan Bank</p>
-                                        <p class="mb-2"><strong>Account Title:</strong> NPF Online Store</p>
-                                        <p class="mb-2"><strong>Account Number:</strong> XXXX-XXXX-XXXX-XXXX</p>
-                                        <p class="mb-2"><strong>IBAN:</strong> PK XX XXXX XXXX XXXX XXXX XXXX XXXX</p>
-                                        <div class="alert alert-warning border-0 mt-3 small">
-                                            <i class="fas fa-exclamation-triangle me-2"></i>
-                                            After placing order, please send payment receipt to:
-                                            <strong>info@npfstore.com</strong>
-                                        </div>
+                                        </h6>
+                                        <p class="mb-2"><strong>Bank:</strong> HBL / Meezan</p>
+                                        <p class="mb-2"><strong>Account:</strong> NPF Online Store</p>
+                                        <p class="mb-2"><strong>Number:</strong> XXXX-XXXX-XXXX</p>
+                                    </div>
+
+                                    <div class="mt-3 p-3 bg-white rounded-3">
+                                        <label for="payment_proof" class="form-label fw-bold">
+                                            <i class="fas fa-upload me-2"></i>Upload Payment Screenshot/Receipt
+                                        </label>
+                                        <input type="file" class="form-control" id="payment_proof" name="payment_proof"
+                                            accept="image/*,.pdf" required>
+                                        <small class="text-muted">Upload screenshot or receipt (JPG, PNG, PDF)</small>
                                     </div>
                                 </div>
                             </div>
@@ -128,23 +125,27 @@
 </div>
 
 <script>
-    function togglePaymentInfo(method) {
-        const paymentInfo = document.getElementById('payment-info');
+    function togglePaymentUpload(method) {
+        const uploadSection = document.getElementById('payment-upload');
         const jazzcashInfo = document.getElementById('jazzcash-info');
         const bankInfo = document.getElementById('bank-info');
+        const fileInput = document.getElementById('payment_proof');
 
         // Hide all
         jazzcashInfo.style.display = 'none';
         bankInfo.style.display = 'none';
 
         if (method === 'jazzcash') {
-            paymentInfo.style.display = 'block';
+            uploadSection.style.display = 'block';
             jazzcashInfo.style.display = 'block';
+            fileInput.required = true;
         } else if (method === 'bank') {
-            paymentInfo.style.display = 'block';
+            uploadSection.style.display = 'block';
             bankInfo.style.display = 'block';
+            fileInput.required = true;
         } else {
-            paymentInfo.style.display = 'none';
+            uploadSection.style.display = 'none';
+            fileInput.required = false;
         }
     }
 </script>

@@ -64,12 +64,22 @@ def checkout():
             
         payment_method = request.form.get('payment_method', 'Cash on Delivery')
         
+        # Handle payment proof upload for non-COD payments
+        payment_proof_url = None
+        if payment_method != 'Cash on Delivery' and 'payment_proof' in request.files:
+            file = request.files['payment_proof']
+            if file and file.filename:
+                import cloudinary.uploader
+                upload_result = cloudinary.uploader.upload(file)
+                payment_proof_url = upload_result['secure_url']
+        
         order = Order(
             user_id=current_user.id if current_user.is_authenticated else None,
             guest_email=email if not current_user.is_authenticated else current_user.email,
             total_price=0,
             status='Pending',
-            payment_method=payment_method
+            payment_method=payment_method,
+            payment_proof=payment_proof_url
         )
         db.session.add(order)
         db.session.commit() # Commit to get ID

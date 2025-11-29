@@ -65,6 +65,7 @@ class Order(db.Model):
     guest_email = db.Column(db.String(120))
     status = db.Column(db.String(20), default='Pending')
     payment_method = db.Column(db.String(50), default='Cash on Delivery')
+    payment_proof = db.Column(db.String(500))  # URL to uploaded payment proof
     total_price = db.Column(db.Float)
     created_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     items = db.relationship('OrderItem', backref='order', lazy='dynamic')
