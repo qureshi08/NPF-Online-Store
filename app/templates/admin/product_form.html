@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h2>{{ title }}</h2>
+<form action="" method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.name.label(class="form-label") }}
+        {{ form.name(class="form-control") }}
+        {% for error in form.name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.description.label(class="form-label") }}
+        {{ form.description(class="form-control", rows=3) }}
+        {% for error in form.description.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.price.label(class="form-label") }}
+        {{ form.price(class="form-control") }}
+        {% for error in form.price.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.stock.label(class="form-label") }}
+        {{ form.stock(class="form-control") }}
+        {% for error in form.stock.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.category_id.label(class="form-label") }}
+        {{ form.category_id(class="form-select") }}
+        {% for error in form.category_id.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.image.label(class="form-label") }}
+        {{ form.image(class="form-control") }}
+        {% for error in form.image.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    <p>{{ form.submit(class="btn btn-primary") }}</p>
+</form>
+{% endblock %}

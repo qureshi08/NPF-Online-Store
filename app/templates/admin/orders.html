@@ -1,0 +1,75 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h2>Orders</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>
+                {% if order.user_id %}
+                {{ order.customer.username }} ({{ order.customer.email }})
+                {% else %}
+                {{ order.guest_email }} (Guest)
+                {% endif %}
+            </td>
+            <td>${{ order.total_price }}</td>
+            <td>
+                <form action="{{ url_for('admin.update_order_status', id=order.id) }}" method="post" class="d-flex">
+                    <select name="status" class="form-select form-select-sm me-2">
+                        <option value="Pending" {% if order.status=='Pending' %}selected{% endif %}>Pending</option>
+                        <option value="Processing" {% if order.status=='Processing' %}selected{% endif %}>Processing
+                        </option>
+                        <option value="Shipped" {% if order.status=='Shipped' %}selected{% endif %}>Shipped</option>
+                        <option value="Delivered" {% if order.status=='Delivered' %}selected{% endif %}>Delivered
+                        </option>
+                        <option value="Cancelled" {% if order.status=='Cancelled' %}selected{% endif %}>Cancelled
+                        </option>
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                </form>
+            </td>
+            <td>
+                <!-- View details modal or page could go here -->
+                <button class="btn btn-sm btn-info" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#order-details-{{ order.id }}">Details</button>
+            </td>
+        </tr>
+        <tr class="collapse" id="order-details-{{ order.id }}">
+            <td colspan="6">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ item.price_at_purchase }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

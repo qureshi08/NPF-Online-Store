@@ -1,0 +1,30 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h2>Categories</h2>
+<a href="{{ url_for('admin.new_category') }}" class="btn btn-primary mb-3">Add New Category</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Slug</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr>
+            <td>{{ category.id }}</td>
+            <td>{{ category.name }}</td>
+            <td>{{ category.slug }}</td>
+            <td>
+                <a href="{{ url_for('admin.edit_category', id=category.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{{ url_for('admin.delete_category', id=category.id) }}" class="btn btn-sm btn-danger"
+                    onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
