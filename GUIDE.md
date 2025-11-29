@@ -37,7 +37,15 @@ Welcome to the NPF Online Store! This guide will help you set up, run, and manag
     CLOUDINARY_CLOUD_NAME=your_cloud_name
     CLOUDINARY_API_KEY=your_api_key
     CLOUDINARY_API_SECRET=your_api_secret
+    STRIPE_PUBLIC_KEY=pk_test_your_stripe_public_key
+    STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
     ```
+    
+    **Getting Stripe Keys:**
+    - Sign up at [stripe.com](https://stripe.com)
+    - Go to Developers > API keys
+    - Copy your Publishable key (starts with `pk_test_`) and Secret key (starts with `sk_test_`)
+    - For production, use live keys (pk_live_ and sk_live_)
 
 5.  **Initialize the Database**:
     ```bash
@@ -122,7 +130,10 @@ To access the Admin Dashboard, you need an account with admin privileges. Since 
 2.  Click the Cart icon in the navbar.
 3.  Proceed to Checkout.
 4.  Enter Shipping Details (auto-filled if logged in).
-5.  **Payment Method**: Choose between "Cash on Delivery" or "Bank Transfer".
+5.  **Payment Method**: Choose between:
+    - **Cash on Delivery**: Pay when you receive your order
+    - **Bank Transfer**: Transfer to our bank account
+    - **Credit/Debit Card**: Pay securely online with Stripe (requires Stripe keys to be configured)
 6.  Place Order. You will see a confirmation page.
 
 ### 3. User Account
