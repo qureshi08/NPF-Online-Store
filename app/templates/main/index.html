@@ -1,25 +1,128 @@
-{% if product.images.first() %}
-<img src="{{ product.images.first().image_url }}" class="card-img-top" alt="{{ product.name }}">
-{% else %}
-<img src="https://via.placeholder.com/400x300" class="card-img-top" alt="No Image">
-{% endif %}
-<div class="card-body">
-    <h5 class="card-title">{{ product.name }}</h5>
-    <p class="price-tag">Rs. {{ "{:,}".format(product.price|int) }}</p>
-    {% if product.images.first() %}
-    <img src="{{ product.images.first().image_url }}" class="card-img-top" alt="{{ product.name }}">
-    {% else %}
-    <img src="https://via.placeholder.com/400x300" class="card-img-top" alt="No Image">
-    {% endif %}
-    <div class="card-body">
-        <h5 class="card-title">{{ product.name }}</h5>
-        <p class="price-tag">Rs. {{ "{:,}".format(product.price|int) }}</p>
-        <a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="btn btn-primary">View
-            Details</a>
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Slider -->
+<div class="swiper hero-swiper mb-5 rounded-4 overflow-hidden shadow-lg" data-aos="fade-up">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide position-relative">
+            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1600&h=600&fit=crop"
+                class="w-100 object-fit-cover" style="height: 500px;" alt="Modern Living Room">
+            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+                style="background: rgba(0,0,0,0.4);">
+                <div class="container text-white">
+                    <h1 class="display-3 fw-bold mb-3" data-aos="fade-right" data-aos-delay="200">Modern Living</h1>
+                    <p class="lead mb-4" data-aos="fade-right" data-aos-delay="400">Discover our new collection of
+                        premium sofas and lounge chairs.</p>
+                    <a href="{{ url_for('main.shop') }}" class="btn btn-primary btn-lg rounded-pill px-5"
+                        data-aos="fade-up" data-aos-delay="600">Shop Now</a>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-slide position-relative">
+            <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4f9d?w=1600&h=600&fit=crop"
+                class="w-100 object-fit-cover" style="height: 500px;" alt="Elegant Dining">
+            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+                style="background: rgba(0,0,0,0.4);">
+                <div class="container text-white">
+                    <h1 class="display-3 fw-bold mb-3">Elegant Dining</h1>
+                    <p class="lead mb-4">Create memorable moments with our exquisite dining sets.</p>
+                    <a href="{{ url_for('main.shop') }}" class="btn btn-primary btn-lg rounded-pill px-5">Explore</a>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-slide position-relative">
+            <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1600&h=600&fit=crop"
+                class="w-100 object-fit-cover" style="height: 500px;" alt="Cozy Bedroom">
+            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+                style="background: rgba(0,0,0,0.4);">
+                <div class="container text-white">
+                    <h1 class="display-3 fw-bold mb-3">Dreamy Comfort</h1>
+                    <p class="lead mb-4">Experience the ultimate relaxation with our bedroom collection.</p>
+                    <a href="{{ url_for('main.shop') }}" class="btn btn-primary btn-lg rounded-pill px-5">Shop
+                        Bedroom</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-next text-white"></div>
+    <div class="swiper-button-prev text-white"></div>
+</div>
+
+<!-- Categories Section -->
+<div class="mb-5" data-aos="fade-up">
+    <h2 class="text-center mb-4">Browse Categories</h2>
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-2 col-6 text-center">
+            <a href="{{ url_for('main.shop', category='Living Room') }}"
+                class="text-decoration-none text-dark group-hover">
+                <div class="rounded-circle bg-white shadow-sm p-4 mb-3 mx-auto d-flex align-items-center justify-content-center"
+                    style="width: 100px; height: 100px; transition: transform 0.3s;">
+                    <i class="fas fa-couch fa-2x text-primary-custom"></i>
+                </div>
+                <h6 class="fw-bold">Living Room</h6>
+            </a>
+        </div>
+        <div class="col-md-2 col-6 text-center">
+            <a href="{{ url_for('main.shop', category='Bedroom') }}" class="text-decoration-none text-dark">
+                <div class="rounded-circle bg-white shadow-sm p-4 mb-3 mx-auto d-flex align-items-center justify-content-center"
+                    style="width: 100px; height: 100px; transition: transform 0.3s;">
+                    <i class="fas fa-bed fa-2x text-primary-custom"></i>
+                </div>
+                <h6 class="fw-bold">Bedroom</h6>
+            </a>
+        </div>
+        <div class="col-md-2 col-6 text-center">
+            <a href="{{ url_for('main.shop', category='Dining Room') }}" class="text-decoration-none text-dark">
+                <div class="rounded-circle bg-white shadow-sm p-4 mb-3 mx-auto d-flex align-items-center justify-content-center"
+                    style="width: 100px; height: 100px; transition: transform 0.3s;">
+                    <i class="fas fa-utensils fa-2x text-primary-custom"></i>
+                </div>
+                <h6 class="fw-bold">Dining</h6>
+            </a>
+        </div>
+        <div class="col-md-2 col-6 text-center">
+            <a href="{{ url_for('main.shop', category='Office') }}" class="text-decoration-none text-dark">
+                <div class="rounded-circle bg-white shadow-sm p-4 mb-3 mx-auto d-flex align-items-center justify-content-center"
+                    style="width: 100px; height: 100px; transition: transform 0.3s;">
+                    <i class="fas fa-laptop fa-2x text-primary-custom"></i>
+                </div>
+                <h6 class="fw-bold">Office</h6>
+            </a>
+        </div>
+        <div class="col-md-2 col-6 text-center">
+            <a href="{{ url_for('main.shop', category='Outdoor') }}" class="text-decoration-none text-dark">
+                <div class="rounded-circle bg-white shadow-sm p-4 mb-3 mx-auto d-flex align-items-center justify-content-center"
+                    style="width: 100px; height: 100px; transition: transform 0.3s;">
+                    <i class="fas fa-tree fa-2x text-primary-custom"></i>
+                </div>
+                <h6 class="fw-bold">Outdoor</h6>
+            </a>
+        </div>
     </div>
 </div>
-</div>
-{% endfor %}
+
+<!-- Featured Products -->
+<h2 class="mb-4 text-center" data-aos="fade-up">Featured Products</h2>
+<div class="row row-cols-1 row-cols-md-4 g-4" data-aos="fade-up">
+    {% for product in featured_products %}
+    <div class="col">
+        <div class="card h-100">
+            {% if product.images.first() %}
+            <img src="{{ product.images.first().image_url }}" class="card-img-top" alt="{{ product.name }}"
+                style="height: 200px; object-fit: cover;">
+            {% else %}
+            <img src="https://via.placeholder.com/400x300" class="card-img-top" alt="No Image">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="price-tag">Rs. {{ "{:,}".format(product.price|int) }}</p>
+                <a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="btn btn-primary w-100">View
+                    Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 
 <!-- Testimonials Section -->
