@@ -19,7 +19,24 @@ def admin_required(f):
 @login_required
 @admin_required
 def index():
-    return render_template('admin/base.html')
+    from app.models import Order, Product, User
+    from sqlalchemy import func
+    
+    # Dashboard Stats
+    total_sales = db.session.query(func.sum(Order.total_price)).scalar() or 0
+    total_orders = Order.query.count()
+    total_products = Product.query.count()
+    total_users = User.query.count()
+    
+    # Recent Orders
+    recent_orders = Order.query.order_by(Order.created_at.desc()).limit(5).all()
+    
+    return render_template('admin/dashboard.html', 
+                         total_sales=total_sales,
+                         total_orders=total_orders,
+                         total_products=total_products,
+                         total_users=total_users,
+                         recent_orders=recent_orders)
 
 @bp.route('/categories')
 @login_required
