@@ -59,3 +59,23 @@ def shop():
 def product_detail(slug):
     product = Product.query.filter_by(slug=slug).first_or_404()
     return render_template('main/product_detail.html', product=product)
+
+@bp.route('/about')
+def about():
+    return render_template('main/page.html', title='About Us')
+
+@bp.route('/contact')
+def contact():
+    return render_template('main/page.html', title='Contact Us')
+
+@bp.route('/shipping')
+def shipping():
+    return render_template('main/page.html', title='Shipping Policy')
+
+@bp.route('/returns')
+def returns():
+    return render_template('main/page.html', title='Returns & Exchanges')
+
+@bp.route('/faqs')
+def faqs():
+    return render_template('main/page.html', title='Frequently Asked Questions')
