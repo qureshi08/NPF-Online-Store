@@ -495,9 +495,10 @@ section {
     }
 }
 
-/* ===== CATEGORY SECTION (Premium) ===== */
+/* ===== CATEGORY SECTION (Refined Premium) ===== */
 .category-section {
     padding-top: 3rem;
+    /* py-12 */
     padding-bottom: 3rem;
     background-color: var(--bg-body);
 }
@@ -506,23 +507,32 @@ section {
     background: white;
     border-radius: 0.75rem;
     /* rounded-xl */
-    box-shadow: var(--shadow-md);
-    padding: 1.25rem;
-    /* p-5 */
+    border: 1px solid #e5e7eb;
+    /* border-gray-200 */
+    box-shadow: var(--shadow-sm);
+    padding: 1.5rem;
+    /* p-6 */
     transition: all 0.3s ease-out;
-    border: 1px solid transparent;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
+    justify-content: center;
+    gap: 1rem;
+    /* gap-4 */
     height: 100%;
+    max-width: 200px;
+    /* Desktop max width */
+    margin: 0 auto;
+    /* Center in column */
 }
 
 .category-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: var(--shadow-hover);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: var(--shadow-md);
     border-color: #d1d5db;
-    /* gray-300 */
+    /* border-gray-300 */
+    background-color: #f9fafb;
+    /* bg-gray-50 */
 }
 
 .category-icon {
@@ -535,14 +545,18 @@ section {
     justify-content: center;
     font-size: 1.5rem;
     color: var(--accent);
-    margin-bottom: 0.5rem;
+    background-color: transparent;
+    border-radius: 0.375rem;
+    /* rounded-md */
 }
 
 .category-title {
-    font-size: 1.125rem;
-    /* text-lg */
+    font-size: 1rem;
+    /* text-base */
     font-weight: 600;
-    color: var(--text-primary);
+    /* font-semibold */
+    color: #1f2937;
+    /* text-gray-800 */
     margin: 0;
     text-align: center;
 }
@@ -551,11 +565,14 @@ section {
 @media (max-width: 768px) {
     .category-card {
         padding: 1rem;
+        max-width: 150px;
+        /* Mobile max width */
+        gap: 0.75rem;
     }
 
     .category-title {
-        font-size: 1rem;
-        /* text-base */
+        font-size: 0.875rem;
+        /* text-sm */
     }
 
     .category-icon {
