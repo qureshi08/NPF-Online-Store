@@ -1,131 +1,138 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row g-5 mb-5">
-    <!-- Product Images -->
-    <div class="col-md-6" data-aos="fade-right">
-        <div class="swiper product-swiper rounded-4 overflow-hidden shadow-sm mb-3">
-            <div class="swiper-wrapper">
-                {% if product.images.all() %}
+<div class="container" style="max-width: 900px; padding-top: 2.5rem; padding-bottom: 2.5rem;">
+    <div class="row g-4 mb-5">
+        <!-- Product Images -->
+        <div class="col-md-6" data-aos="fade-right">
+            <div class="swiper product-swiper rounded-4 overflow-hidden shadow-sm mb-3"
+                style="max-width: 400px; margin: 0 auto;">
+                <div class="swiper-wrapper">
+                    {% if product.images.all() %}
+                    {% for image in product.images %}
+                    <div class="swiper-slide">
+                        <img src="{{ image.image_url }}" class="w-100 object-fit-cover" style="height: 400px;"
+                            alt="{{ product.name }}">
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="swiper-slide">
+                        <img src="https://via.placeholder.com/400x400" class="w-100 object-fit-cover"
+                            style="height: 400px;" alt="No Image">
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="swiper-button-next text-white"></div>
+                <div class="swiper-button-prev text-white"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+
+            <!-- Thumbnails -->
+            <div class="row g-2" style="max-width: 400px; margin: 0 auto;">
                 {% for image in product.images %}
-                <div class="swiper-slide">
-                    <img src="{{ image.image_url }}" class="w-100 object-fit-cover" style="height: 500px;"
-                        alt="{{ product.name }}">
+                <div class="col-3">
+                    <img src="{{ image.image_url }}"
+                        class="img-fluid rounded cursor-pointer border border-2 border-light hover-border-primary"
+                        style="height: 70px; object-fit: cover;" alt="Thumbnail">
                 </div>
                 {% endfor %}
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-6" data-aos="fade-left">
+            <nav aria-label="breadcrumb" class="mb-2">
+                <ol class="breadcrumb" style="font-size: 0.875rem;">
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.shop') }}">Shop</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+                </ol>
+            </nav>
+
+            <h1 class="fw-bold mb-2" style="font-size: 1.5rem;">{{ product.name }}</h1>
+            <div class="mb-3" style="font-size: 0.875rem;">
+                <span class="text-warning">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                        class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </span>
+                <span class="text-muted ms-2">(4.5/5 based on 12 reviews)</span>
+            </div>
+
+            <h2 class="price-tag fw-bold mb-3" style="font-size: 1.5rem; color: var(--accent);">Rs. {{
+                "{:,}".format(product.price|int) }}</h2>
+
+            <p class="text-muted mb-4" style="font-size: 0.875rem; line-height: 1.6;">{{ product.description }}</p>
+
+            <div class="mb-4">
+                <h6 class="fw-bold mb-2" style="font-size: 0.875rem;">Availability:</h6>
+                {% if product.stock > 0 %}
+                <span class="badge bg-success rounded-pill px-3 py-2" style="font-size: 0.8125rem;"><i
+                        class="fas fa-check me-1"></i> In Stock ({{
+                    product.stock }} available)</span>
                 {% else %}
-                <div class="swiper-slide">
-                    <img src="https://via.placeholder.com/600x600" class="w-100 object-fit-cover" style="height: 500px;"
-                        alt="No Image">
-                </div>
+                <span class="badge bg-danger rounded-pill px-3 py-2" style="font-size: 0.8125rem;"><i
+                        class="fas fa-times me-1"></i> Out of Stock</span>
                 {% endif %}
             </div>
-            <div class="swiper-button-next text-white"></div>
-            <div class="swiper-button-prev text-white"></div>
-            <div class="swiper-pagination"></div>
-        </div>
 
-        <!-- Thumbnails (Optional enhancement for later) -->
-        <div class="row g-2">
-            {% for image in product.images %}
-            <div class="col-3">
-                <img src="{{ image.image_url }}"
-                    class="img-fluid rounded cursor-pointer border border-2 border-light hover-border-primary"
-                    style="height: 80px; object-fit: cover;" alt="Thumbnail">
-            </div>
-            {% endfor %}
-        </div>
-    </div>
+            <hr class="my-4">
 
-    <!-- Product Info -->
-    <div class="col-md-6" data-aos="fade-left">
-        <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ url_for('main.shop') }}">Shop</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
-            </ol>
-        </nav>
-
-        <h1 class="display-5 fw-bold mb-2">{{ product.name }}</h1>
-        <div class="mb-3">
-            <span class="text-warning">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                    class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-            </span>
-            <span class="text-muted ms-2">(4.5/5 based on 12 reviews)</span>
-        </div>
-
-        <h2 class="price-tag display-6 mb-4">Rs. {{ "{:,}".format(product.price|int) }}</h2>
-
-        <p class="lead text-muted mb-4">{{ product.description }}</p>
-
-        <div class="mb-4">
-            <h6 class="fw-bold mb-2">Availability:</h6>
-            {% if product.stock > 0 %}
-            <span class="badge bg-success rounded-pill px-3 py-2"><i class="fas fa-check me-1"></i> In Stock ({{
-                product.stock }} available)</span>
-            {% else %}
-            <span class="badge bg-danger rounded-pill px-3 py-2"><i class="fas fa-times me-1"></i> Out of Stock</span>
-            {% endif %}
-        </div>
-
-        <hr class="my-4">
-
-        <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="post">
-            <div class="row g-3 align-items-end mb-4">
-                <div class="col-md-4">
-                    <label for="quantity" class="form-label fw-bold">Quantity</label>
-                    <div class="input-group">
-                        <button class="btn btn-outline-secondary" type="button" onclick="decrementQty()">-</button>
-                        <input type="number" class="form-control text-center" id="quantity" name="quantity" value="1"
-                            min="1" max="{{ product.stock }}">
-                        <button class="btn btn-outline-secondary" type="button" onclick="incrementQty()">+</button>
+            <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="post">
+                <div class="row g-3 align-items-end mb-4">
+                    <div class="col-md-5">
+                        <label for="quantity" class="form-label fw-bold" style="font-size: 0.875rem;">Quantity</label>
+                        <div class="input-group input-group-sm">
+                            <button class="btn btn-outline-secondary" type="button" onclick="decrementQty()">-</button>
+                            <input type="number" class="form-control text-center" id="quantity" name="quantity"
+                                value="1" min="1" max="{{ product.stock }}">
+                            <button class="btn btn-outline-secondary" type="button" onclick="incrementQty()">+</button>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill"
+                            style="font-size: 0.875rem; padding: 0.5rem 1rem;" {% if product.stock==0 %}disabled{% endif
+                            %}>
+                            <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                        </button>
                     </div>
                 </div>
-                <div class="col-md-8">
-                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill" {% if product.stock==0
-                        %}disabled{% endif %}>
-                        <i class="fas fa-shopping-cart me-2"></i> Add to Cart
-                    </button>
-                </div>
-            </div>
-        </form>
+            </form>
 
-        <div class="d-flex gap-3">
-            <button class="btn btn-outline-secondary rounded-pill flex-grow-1"><i class="far fa-heart me-2"></i> Add to
-                Wishlist</button>
-            <button class="btn btn-outline-secondary rounded-pill flex-grow-1"><i class="fas fa-share-alt me-2"></i>
-                Share</button>
-        </div>
-
-        <div class="mt-4 p-4 bg-light rounded-4">
-            <div class="d-flex align-items-center mb-2">
-                <i class="fas fa-truck text-primary-custom me-3 fa-lg"></i>
-                <div>
-                    <h6 class="mb-0 fw-bold">Free Delivery</h6>
-                    <small class="text-muted">For orders over Rs. 50,000</small>
-                </div>
+            <div class="d-flex gap-2 mb-4">
+                <button class="btn btn-outline-secondary rounded-pill flex-grow-1"
+                    style="font-size: 0.8125rem; padding: 0.4rem 0.8rem;"><i class="far fa-heart me-1"></i>
+                    Wishlist</button>
+                <button class="btn btn-outline-secondary rounded-pill flex-grow-1"
+                    style="font-size: 0.8125rem; padding: 0.4rem 0.8rem;"><i class="fas fa-share-alt me-1"></i>
+                    Share</button>
             </div>
-            <hr>
-            <div class="d-flex align-items-center">
-                <i class="fas fa-shield-alt text-primary-custom me-3 fa-lg"></i>
-                <div>
-                    <h6 class="mb-0 fw-bold">1 Year Warranty</h6>
-                    <small class="text-muted">Standard warranty included</small>
+
+            <div class="p-3 bg-light rounded-3" style="font-size: 0.875rem;">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-truck text-primary-custom me-2"></i>
+                    <div>
+                        <div class="fw-bold" style="font-size: 0.875rem;">Free Delivery</div>
+                        <small class="text-muted" style="font-size: 0.75rem;">For orders over Rs. 50,000</small>
+                    </div>
+                </div>
+                <hr class="my-2">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-shield-alt text-primary-custom me-2"></i>
+                    <div>
+                        <div class="fw-bold" style="font-size: 0.875rem;">1 Year Warranty</div>
+                        <small class="text-muted" style="font-size: 0.75rem;">Standard warranty included</small>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Related Products (Placeholder logic for now) -->
-<div class="mb-5" data-aos="fade-up">
-    <h3 class="mb-4">You May Also Like</h3>
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-        <!-- We would ideally pass related_products from the route. For now, we can't easily query here without route change. 
-             So we will skip this or use a placeholder if we had the data. 
-             Let's leave it empty for now or show a message if no related products passed. -->
+    <!-- Related Products -->
+    <div class="related-products mt-5 pt-4" data-aos="fade-up">
+        <h3 class="mb-4" style="font-size: 1.25rem;">You May Also Like</h3>
+        <div class="row row-cols-2 row-cols-md-4 g-3">
+            <!-- Placeholder for related products -->
+        </div>
     </div>
 </div>
 {% endblock %}
