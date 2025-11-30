@@ -91,7 +91,8 @@
                             </td>
                             <td class="fw-bold">Rs. {{ "{:,}".format(order.total_price|int) }}</td>
                             <td class="text-end pe-4">
-                                <a href="#" class="btn btn-sm btn-outline-primary rounded-pill">View</a>
+                                <a href="{{ url_for('admin.orders') }}"
+                                    class="btn btn-sm btn-outline-primary rounded-pill">View</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -101,7 +102,7 @@
         </div>
     </div>
 
-    <!-- Quick Actions / Chart Placeholder -->
+    <!-- Sales Chart -->
     <div class="col-md-4">
         <div class="card border-0 shadow-sm rounded-4 mb-4">
             <div class="card-header bg-white border-0 py-3">
