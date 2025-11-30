@@ -70,7 +70,12 @@ def checkout():
             file = request.files['payment_proof']
             if file and file.filename:
                 import cloudinary.uploader
-                upload_result = cloudinary.uploader.upload(file)
+                upload_result = cloudinary.uploader.upload(
+                    file,
+                    resource_type="auto",  # Supports images, PDFs, and other files
+                    type="upload",          # Makes file publicly accessible
+                    access_mode="public"    # Ensures public read access
+                )
                 payment_proof_url = upload_result['secure_url']
         
         order = Order(
