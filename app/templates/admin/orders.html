@@ -1,75 +1,108 @@
 {% extends "admin/base.html" %}
 
 {% block admin_content %}
-<h2>Orders</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Date</th>
-            <th>Customer</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for order in orders %}
-        <tr>
-            <td>{{ order.id }}</td>
-            <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-            <td>
-                {% if order.user_id %}
-                {{ order.customer.username }} ({{ order.customer.email }})
-                {% else %}
-                {{ order.guest_email }} (Guest)
-                {% endif %}
-            </td>
-            <td>${{ order.total_price }}</td>
-            <td>
-                <form action="{{ url_for('admin.update_order_status', id=order.id) }}" method="post" class="d-flex">
-                    <select name="status" class="form-select form-select-sm me-2">
-                        <option value="Pending" {% if order.status=='Pending' %}selected{% endif %}>Pending</option>
-                        <option value="Processing" {% if order.status=='Processing' %}selected{% endif %}>Processing
-                        </option>
-                        <option value="Shipped" {% if order.status=='Shipped' %}selected{% endif %}>Shipped</option>
-                        <option value="Delivered" {% if order.status=='Delivered' %}selected{% endif %}>Delivered
-                        </option>
-                        <option value="Cancelled" {% if order.status=='Cancelled' %}selected{% endif %}>Cancelled
-                        </option>
-                    </select>
-                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
-                </form>
-            </td>
-            <td>
-                <!-- View details modal or page could go here -->
-                <button class="btn btn-sm btn-info" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#order-details-{{ order.id }}">Details</button>
-            </td>
-        </tr>
-        <tr class="collapse" id="order-details-{{ order.id }}">
-            <td colspan="6">
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Qty</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in order.items %}
-                        <tr>
-                            <td>{{ item.product.name }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>${{ item.price_at_purchase }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<h2 class="mb-4">Orders Management</h2>
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="bg-light">
+                <tr>
+                    <th class="ps-4">ID</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Payment</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th class="pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td class="ps-4 fw-bold">#{{ order.id }}</td>
+                    <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        {% if order.user_id %}
+                        {{ order.customer.username }}<br>
+                        <small class="text-muted">{{ order.customer.email }}</small>
+                        {% else %}
+                        <span class="badge bg-secondary">Guest</span><br>
+                        <small class="text-muted">{{ order.guest_email }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="mb-1">
+                            <strong>{{ order.payment_method }}</strong>
+                        </div>
+                        {% if order.payment_proof %}
+                        <a href="{{ order.payment_proof }}" target="_blank" class="btn btn-sm btn-outline-info">
+                            <i class="fas fa-image"></i> View Proof
+                        </a>
+                        {% else %}
+                        <span class="text-muted small">No proof uploaded</span>
+                        {% endif %}
+                    </td>
+                    <td class="fw-bold">Rs. {{ "{:,}".format(order.total_price|int) }}</td>
+                    <td>
+                        <form action="{{ url_for('admin.update_order_status', id=order.id) }}" method="post"
+                            class="d-inline">
+                            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()"
+                                style="min-width: 130px;">
+                                <option value="Pending" {% if order.status=='Pending' %}selected{% endif %}>Pending
+                                </option>
+                                <option value="Payment Approved" {% if order.status=='Payment Approved' %}selected{%
+                                    endif %}>Payment Approved</option>
+                                <option value="Payment Rejected" {% if order.status=='Payment Rejected' %}selected{%
+                                    endif %}>Payment Rejected</option>
+                                <option value="Processing" {% if order.status=='Processing' %}selected{% endif %}>
+                                    Processing</option>
+                                <option value="Shipped" {% if order.status=='Shipped' %}selected{% endif %}>Shipped
+                                </option>
+                                <option value="Delivered" {% if order.status=='Delivered' %}selected{% endif %}>
+                                    Delivered</option>
+                                <option value="Cancelled" {% if order.status=='Cancelled' %}selected{% endif %}>
+                                    Cancelled</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td class="pe-4">
+                        <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#order-details-{{ order.id }}">
+                            <i class="fas fa-eye"></i> Details
+                        </button>
+                    </td>
+                </tr>
+                <tr class="collapse" id="order-details-{{ order.id }}">
+                    <td colspan="7" class="bg-light">
+                        <div class="p-4">
+                            <h6 class="fw-bold mb-3">Order Items</h6>
+                            <table class="table table-sm table-bordered bg-white">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order.items %}
+                                    <tr>
+                                        <td>{{ item.product.name }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>Rs. {{ "{:,}".format(item.price_at_purchase|int) }}</td>
+                                        <td>Rs. {{ "{:,}".format((item.price_at_purchase * item.quantity)|int) }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
