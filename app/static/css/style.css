@@ -888,3 +888,285 @@ body {
         margin-top: 1rem;
     }
 }
+/* ===== COMPREHENSIVE SPACING IMPROVEMENTS ===== */
+
+/* Global Container Spacing */
+.container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
+}
+
+/* Section Vertical Spacing */
+section {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    section {
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+    }
+}
+
+/* Navbar Spacing Improvements */
+.navbar {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+}
+
+@media (max-width: 991.98px) {
+    .navbar {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+}
+
+.navbar .container {
+    max-width: 1400px;
+}
+
+.navbar-nav {
+    gap: 1.5rem !important;
+}
+
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        gap: 0.75rem !important;
+    }
+}
+
+/* Heading Spacing */
+h1 {
+    margin-bottom: 1rem !important;
+}
+
+h2 {
+    margin-bottom: 1.25rem !important;
+}
+
+@media (min-width: 768px) {
+    h2 {
+        margin-bottom: 1.5rem !important;
+    }
+}
+
+h3, h4, h5, h6 {
+    margin-bottom: 0.75rem !important;
+}
+
+/* Paragraph Spacing */
+p {
+    margin-bottom: 0.75rem !important;
+}
+
+.lead {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Product Detail Page Spacing */
+.product-detail-wrapper {
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+    .product-detail-wrapper {
+        padding-top: 3.5rem;
+        padding-bottom: 4rem;
+    }
+}
+
+.product-detail-wrapper .row {
+    row-gap: 2rem !important;
+}
+
+@media (min-width: 768px) {
+    .product-detail-wrapper .row {
+        row-gap: 3rem !important;
+    }
+}
+
+.product-detail-wrapper h1 {
+    margin-bottom: 0.5rem !important;
+}
+
+.product-detail-wrapper .price-tag {
+    margin-bottom: 0.75rem !important;
+}
+
+.product-detail-wrapper .lead {
+    margin-bottom: 1.5rem !important;
+}
+
+.product-detail-wrapper form {
+    margin-top: 1.5rem !important;
+}
+
+/* You May Also Like Section */
+.related-products {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+}
+
+@media (min-width: 768px) {
+    .related-products {
+        margin-top: 4rem;
+    }
+}
+
+.related-products h3 {
+    margin-bottom: 1.5rem !important;
+}
+
+@media (min-width: 768px) {
+    .related-products h3 {
+        margin-bottom: 2rem !important;
+    }
+}
+
+/* Cart Page Spacing */
+.cart-wrapper {
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+    .cart-wrapper {
+        padding-top: 3.5rem;
+        padding-bottom: 4rem;
+    }
+}
+
+.cart-wrapper h2 {
+    margin-bottom: 1.5rem !important;
+}
+
+.cart-wrapper .table tbody tr {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.cart-wrapper .table td {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+.cart-wrapper .table tfoot tr td {
+    padding-top: 1.5rem !important;
+}
+
+.cart-actions {
+    margin-top: 1.5rem;
+}
+
+/* Footer Spacing */
+footer {
+    margin-top: 3rem !important;
+    padding-top: 2.5rem !important;
+    padding-bottom: 2rem !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (min-width: 768px) {
+    footer {
+        margin-top: 4rem !important;
+        padding-top: 3.5rem !important;
+        padding-bottom: 2.5rem !important;
+    }
+}
+
+footer .container {
+    max-width: 1400px;
+}
+
+footer h5 {
+    margin-bottom: 0.75rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+}
+
+footer a {
+    margin-bottom: 0.5rem !important;
+    line-height: 1.7 !important;
+}
+
+footer .row {
+    row-gap: 2rem !important;
+}
+
+@media (min-width: 768px) {
+    footer .row {
+        row-gap: 0 !important;
+    }
+}
+
+footer .input-group {
+    margin-top: 0.75rem !important;
+}
+
+/* Card Spacing */
+.card {
+    margin-bottom: 1.5rem !important;
+}
+
+.card-body {
+    padding: 1.5rem !important;
+}
+
+@media (min-width: 768px) {
+    .card-body {
+        padding: 2rem !important;
+    }
+}
+
+/* Grid Spacing */
+.row {
+    row-gap: 1.25rem !important;
+}
+
+@media (max-width: 767.98px) {
+    .row {
+        row-gap: 0.75rem !important;
+    }
+}
+
+/* Mobile Spacing Adjustments */
+@media (max-width: 767.98px) {
+    section {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+
+    h1 {
+        font-size: 1.75rem !important;
+    }
+
+    h2 {
+        font-size: 1.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .card-body {
+        padding: 1rem !important;
+    }
+
+    footer {
+        padding-top: 2rem !important;
+        padding-bottom: 1.5rem !important;
+    }
+}
