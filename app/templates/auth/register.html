@@ -1,37 +1,69 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Register</h1>
-<form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-    <div class="mb-3">
-        {{ form.username.label(class="form-label") }}
-        {{ form.username(class="form-control", size=32) }}
-        {% for error in form.username.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold">Create Account</h2>
+                            <p class="text-muted">Join us for a premium shopping experience</p>
+                        </div>
+
+                        <form action="" method="post" novalidate>
+                            {{ form.hidden_tag() }}
+
+                            <div class="mb-4">
+                                {{ form.username.label(class="form-label fw-medium") }}
+                                {{ form.username(class="form-control form-control-lg bg-light border-0",
+                                placeholder="Choose a username") }}
+                                {% for error in form.username.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form.email.label(class="form-label fw-medium") }}
+                                {{ form.email(class="form-control form-control-lg bg-light border-0", placeholder="Enter
+                                your email") }}
+                                {% for error in form.email.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form.password.label(class="form-label fw-medium") }}
+                                {{ form.password(class="form-control form-control-lg bg-light border-0",
+                                placeholder="Create a password") }}
+                                {% for error in form.password.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form.confirm_password.label(class="form-label fw-medium") }}
+                                {{ form.confirm_password(class="form-control form-control-lg bg-light border-0",
+                                placeholder="Confirm your password") }}
+                                {% for error in form.confirm_password.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="d-grid mb-4">
+                                {{ form.submit(class="btn btn-primary btn-lg rounded-pill") }}
+                            </div>
+
+                            <div class="text-center text-muted">
+                                Already have an account? <a href="{{ url_for('auth.login') }}"
+                                    class="text-primary text-decoration-none fw-medium">Sign in</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        {{ form.email.label(class="form-label") }}
-        {{ form.email(class="form-control", size=32) }}
-        {% for error in form.email.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </div>
-    <div class="mb-3">
-        {{ form.password.label(class="form-label") }}
-        {{ form.password(class="form-control", size=32) }}
-        {% for error in form.password.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </div>
-    <div class="mb-3">
-        {{ form.confirm_password.label(class="form-label") }}
-        {{ form.confirm_password(class="form-control", size=32) }}
-        {% for error in form.confirm_password.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </div>
-    <p>{{ form.submit(class="btn btn-primary") }}</p>
-</form>
+</section>
 {% endblock %}
