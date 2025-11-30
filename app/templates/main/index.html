@@ -1,160 +1,127 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Hero Slider -->
-<div class="swiper hero-swiper mb-5 shadow-lg" data-aos="fade-up">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide position-relative">
+<!-- Hero Section -->
+<section class="py-0">
+    <div class="container">
+        <div class="hero" data-aos="fade-up">
             <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1600&h=800&fit=crop"
-                class="w-100 h-100 object-fit-cover" alt="Modern Living Room">
-            <div class="hero-slide-content">
-                <div class="container text-white text-center">
-                    <h1 class="display-2 fw-bold mb-4" data-aos="fade-up" data-aos-delay="200">Elevate Your Living</h1>
-                    <p class="lead mb-5 mx-auto" style="max-width: 600px;" data-aos="fade-up" data-aos-delay="400">
+                style="position: absolute; width: 100%; height: 100%; object-fit: cover;" alt="Modern Living Room">
+            <div class="hero-content">
+                <div style="max-width: 700px; padding: 0 1.5rem;">
+                    <h1 data-aos="fade-up" data-aos-delay="200">Elevate Your Living Space</h1>
+                    <p data-aos="fade-up" data-aos-delay="400">
                         Discover our curated collection of premium furniture designed for modern lifestyles.
                     </p>
-                    <a href="{{ url_for('main.shop') }}" class="btn btn-accent btn-lg rounded-0 px-5" data-aos="fade-up"
-                        data-aos-delay="600">SHOP COLLECTION</a>
-                </div>
-            </div>
-        </div>
-        <div class="swiper-slide position-relative">
-            <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4f9d?w=1600&h=800&fit=crop"
-                class="w-100 h-100 object-fit-cover" alt="Elegant Dining">
-            <div class="hero-slide-content">
-                <div class="container text-white text-center">
-                    <h1 class="display-2 fw-bold mb-4">Timeless Elegance</h1>
-                    <p class="lead mb-5 mx-auto" style="max-width: 600px;">
-                        Create memorable dining experiences with our exquisite table sets.
-                    </p>
-                    <a href="{{ url_for('main.shop') }}" class="btn btn-accent btn-lg rounded-0 px-5">EXPLORE DINING</a>
+                    <a href="{{ url_for('main.shop') }}" class="btn btn-accent btn-lg" data-aos="fade-up"
+                        data-aos-delay="600">
+                        Shop Collection
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="swiper-pagination"></div>
-</div>
+</section>
 
 <!-- Categories Section -->
-<div class="container mb-5" data-aos="fade-up">
-    <div class="text-center mb-5">
-        <h2 class="display-5 mb-3">Browse by Category</h2>
-        <p class="text-muted">Find the perfect piece for every room in your home.</p>
-    </div>
-
-    <div class="row g-4 justify-content-center">
-        {% set categories = [
-        ('Living Room', 'living-room', 'couch'),
-        ('Bedroom', 'bedroom', 'bed'),
-        ('Dining', 'dining', 'utensils'),
-        ('Office', 'office', 'laptop'),
-        ('Outdoor', 'outdoor', 'tree')
-        ] %}
-
-        {% for name, slug, icon in categories %}
-        <div class="col-lg-2 col-md-4 col-6">
-            <a href="{{ url_for('main.shop', category=slug) }}" class="text-decoration-none group-hover">
-                <div class="card h-100 border-0 bg-light text-center py-4 hover-shadow transition">
-                    <div class="mb-3 text-primary-custom">
-                        <i class="fas fa-{{ icon }} fa-2x"></i>
-                    </div>
-                    <h6 class="fw-bold mb-0 text-dark">{{ name }}</h6>
-                </div>
-            </a>
+<section>
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2>Browse by Category</h2>
+            <p class="text-muted">Find the perfect piece for every room in your home</p>
         </div>
-        {% endfor %}
+
+        <div class="row g-4">
+            {% set categories = [
+            ('Living Room', 'living-room', 'couch'),
+            ('Bedroom', 'bedroom', 'bed'),
+            ('Dining', 'dining', 'utensils'),
+            ('Office', 'office', 'laptop')
+            ] %}
+
+            {% for name, slug, icon in categories %}
+            <div class="col-lg-3 col-md-6 col-6" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <a href="{{ url_for('main.shop', category=slug) }}" style="text-decoration: none;">
+                    <div class="card text-center"
+                        style="padding: 2rem 1rem; border: 1px solid var(--border); transition: var(--transition);">
+                        <div style="font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem;">
+                            <i class="fas fa-{{ icon }}"></i>
+                        </div>
+                        <h6 style="margin: 0; font-weight: 600; color: var(--text-primary);">{{ name }}</h6>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-</div>
+</section>
 
 <!-- Featured Products -->
-<div class="container mb-5" data-aos="fade-up">
-    <div class="d-flex justify-content-between align-items-end mb-5">
-        <div>
-            <h2 class="display-5 mb-2">Featured Collection</h2>
-            <p class="text-muted mb-0">Handpicked items just for you.</p>
+<section class="section-alt">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4" data-aos="fade-up">
+            <div>
+                <h2>Featured Collection</h2>
+                <p class="text-muted mb-0">Handpicked items just for you</p>
+            </div>
+            <a href="{{ url_for('main.shop') }}" class="btn btn-outline">View All</a>
         </div>
-        <a href="{{ url_for('main.shop') }}" class="btn btn-outline-dark rounded-0">VIEW ALL</a>
-    </div>
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-        {% for product in featured_products %}
-        <div class="col">
-            <div class="card h-100 border-0">
-                <div class="card-img-wrapper">
-                    {% if product.images.first() %}
-                    <img src="{{ product.images.first().image_url }}" class="card-img-top" alt="{{ product.name }}">
-                    {% else %}
-                    <img src="https://via.placeholder.com/400x400" class="card-img-top" alt="No Image">
-                    {% endif %}
-                    <div class="position-absolute bottom-0 start-0 w-100 p-3 bg-gradient-dark d-none">
-                        <a href="{{ url_for('main.product_detail', slug=product.slug) }}"
-                            class="btn btn-light w-100 btn-sm">Quick View</a>
+        <div class="product-grid">
+            {% for product in featured_products %}
+            <a href="{{ url_for('main.product_detail', slug=product.slug) }}"
+                style="text-decoration: none; color: inherit;" data-aos="fade-up"
+                data-aos-delay="{{ loop.index * 100 }}">
+                <div class="product-card">
+                    <div class="product-card-image">
+                        {% if product.images.first() %}
+                        <img src="{{ product.images.first().image_url }}" alt="{{ product.name }}" loading="lazy">
+                        {% else %}
+                        <img src="https://via.placeholder.com/400x400?text=No+Image" alt="No Image" loading="lazy">
+                        {% endif %}
+                    </div>
+                    <div class="product-card-body">
+                        {% if product.category %}
+                        <div class="product-card-category">{{ product.category.name }}</div>
+                        {% endif %}
+                        <h3 class="product-card-title">{{ product.name }}</h3>
+                        <div class="product-card-price">Rs. {{ "{:,}".format(product.price|int) }}</div>
                     </div>
                 </div>
-                <div class="card-body text-start px-0">
-                    <h5 class="card-title text-truncate">{{ product.name }}</h5>
-                    <p class="price-tag mb-0">Rs. {{ "{:,}".format(product.price|int) }}</p>
-                </div>
-            </div>
+            </a>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
-</div>
+</section>
 
-<!-- Value Proposition -->
-<div class="bg-light py-5 mb-5" data-aos="fade-up">
+<!-- Features Section -->
+<section>
     <div class="container">
         <div class="row g-4 text-center">
-            <div class="col-md-4">
-                <div class="mb-3 text-accent">
-                    <i class="fas fa-shipping-fast fa-3x"></i>
+            <div class="col-md-4" data-aos="fade-up">
+                <div style="font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem;">
+                    <i class="fas fa-shipping-fast"></i>
                 </div>
-                <h4 class="mb-2">Free Shipping</h4>
-                <p class="text-muted small">On all orders over Rs. 50,000</p>
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Free Shipping</h4>
+                <p class="text-muted" style="font-size: 0.875rem;">On all orders over Rs. 50,000</p>
             </div>
-            <div class="col-md-4">
-                <div class="mb-3 text-accent">
-                    <i class="fas fa-shield-alt fa-3x"></i>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div style="font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem;">
+                    <i class="fas fa-shield-alt"></i>
                 </div>
-                <h4 class="mb-2">Secure Payment</h4>
-                <p class="text-muted small">100% secure payment processing</p>
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Secure Payment</h4>
+                <p class="text-muted" style="font-size: 0.875rem;">100% secure payment processing</p>
             </div>
-            <div class="col-md-4">
-                <div class="mb-3 text-accent">
-                    <i class="fas fa-undo fa-3x"></i>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div style="font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem;">
+                    <i class="fas fa-undo"></i>
                 </div>
-                <h4 class="mb-2">Easy Returns</h4>
-                <p class="text-muted small">30-day money back guarantee</p>
+                <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Easy Returns</h4>
+                <p class="text-muted" style="font-size: 0.875rem;">30-day money back guarantee</p>
             </div>
         </div>
     </div>
-</div>
-
-<!-- Testimonials Section -->
-<div class="container mb-5" data-aos="fade-up">
-    <h2 class="text-center display-5 mb-5">Client Testimonials</h2>
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card border-0 bg-white shadow-sm p-4 h-100">
-                <div class="mb-3 text-warning">
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                        class="fas fa-star"></i><i class="fas fa-star"></i>
-                </div>
-                <p class="fst-italic text-muted mb-4">"The quality of the sofa exceeded my expectations. It's the
-                    centerpiece of our living room now."</p>
-                <div class="d-flex align-items-center">
-                    <div class="bg-primary-custom rounded-circle text-white d-flex align-items-center justify-content-center me-3"
-                        style="width: 40px; height: 40px;">S</div>
-                    <div>
-                        <h6 class="mb-0 fw-bold">Sarah Ahmed</h6>
-                        <small class="text-muted">Verified Buyer</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- More testimonials... -->
-    </div>
-</div>
+</section>
 
 {% endblock %}
 
