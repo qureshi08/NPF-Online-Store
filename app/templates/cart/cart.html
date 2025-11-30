@@ -1,51 +1,86 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Shopping Cart</h2>
-{% if products %}
-<table class="table">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Total</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in products %}
-        <tr>
-            <td>{{ item.product.name }}</td>
-            <td>${{ item.product.price }}</td>
-            <td>
-                <form action="{{ url_for('cart.update_cart', product_id=item.product.id) }}" method="post"
-                    class="d-flex">
-                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1"
-                        max="{{ item.product.stock }}" class="form-control form-control-sm me-2" style="width: 70px;">
-                    <button type="submit" class="btn btn-sm btn-secondary">Update</button>
-                </form>
-            </td>
-            <td>${{ item.product.price * item.quantity }}</td>
-            <td>
-                <a href="{{ url_for('cart.remove_from_cart', product_id=item.product.id) }}"
-                    class="btn btn-sm btn-danger">Remove</a>
-            </td>
-        </tr>
-        {% endfor %}
-        <tr>
-            <td colspan="3" class="text-end"><strong>Total:</strong></td>
-            <td><strong>${{ total_price }}</strong></td>
-            <td></td>
-        </tr>
-    </tbody>
-</table>
-<div class="d-flex justify-content-between">
-    <a href="{{ url_for('main.shop') }}" class="btn btn-secondary">Continue Shopping</a>
-    <a href="{{ url_for('cart.checkout') }}" class="btn btn-success">Checkout</a>
+<div class="container py-5" style="min-height: 70vh;">
+    <h2 class="mb-4">Shopping Cart</h2>
+
+    {% if products %}
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in products %}
+                    <tr>
+                        <td class="align-middle">
+                            <div class="d-flex align-items-center">
+                                {% if item.product.images.first() %}
+                                <img src="{{ item.product.images.first().image_url }}" alt="{{ item.product.name }}"
+                                    class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                {% endif %}
+                                <strong>{{ item.product.name }}</strong>
+                            </div>
+                        </td>
+                        <td class="align-middle">Rs. {{ "{:,}".format(item.product.price|int) }}</td>
+                        <td class="align-middle">
+                            <form action="{{ url_for('cart.update_cart', product_id=item.product.id) }}" method="post"
+                                class="d-flex">
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1"
+                                    max="{{ item.product.stock }}" class="form-control form-control-sm me-2"
+                                    style="width: 80px;">
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+                            </form>
+                        </td>
+                        <td class="align-middle fw-bold">Rs. {{ "{:,}".format((item.product.price * item.quantity)|int)
+                            }}</td>
+                        <td class="align-middle">
+                            <a href="{{ url_for('cart.remove_from_cart', product_id=item.product.id) }}"
+                                class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="table-light">
+                        <td colspan="3" class="text-end fw-bold fs-5">Total:</td>
+                        <td class="fw-bold fs-5 text-primary">Rs. {{ "{:,}".format(total_price|int) }}</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{{ url_for('main.shop') }}" class="btn btn-outline-secondary btn-lg">
+            <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+        </a>
+        <a href="{{ url_for('cart.checkout') }}" class="btn btn-primary btn-lg">
+            Proceed to Checkout<i class="fas fa-arrow-right ms-2"></i>
+        </a>
+    </div>
+
+    {% else %}
+    <div class="text-center py-5" style="min-height: 60vh;">
+        <div class="card border-0 shadow-sm rounded-4 mx-auto p-5" style="max-width: 500px;">
+            <i class="fas fa-shopping-cart fa-4x text-muted mb-4"></i>
+            <h3 class="mb-3">Your cart is empty</h3>
+            <p class="text-muted mb-4">Start adding some amazing products to your cart!</p>
+            <a href="{{ url_for('main.shop') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-shopping-bag me-2"></i>Go Shopping
+            </a>
+        </div>
+    </div>
+    {% endif %}
 </div>
-{% else %}
-<p>Your cart is empty.</p>
-<a href="{{ url_for('main.shop') }}" class="btn btn-primary">Go Shopping</a>
-{% endif %}
 {% endblock %}

@@ -6,24 +6,15 @@
 :root {
     /* Brand Colors - Sophisticated Palette */
     --primary: #2C3E50;
-    /* Deep Charcoal */
     --primary-light: #34495E;
     --accent: #D4AF37;
-    /* Metallic Gold */
     --accent-hover: #C5A028;
-
-    /* Functional Colors */
     --text-main: #1A1A1A;
     --text-muted: #666666;
     --bg-body: #F9F9F9;
-    /* Off-white for premium feel */
     --bg-white: #FFFFFF;
     --border-light: #E5E5E5;
-
-    /* Spacing & Layout */
     --header-height: 80px;
-
-    /* Shadows & Effects */
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
     --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
@@ -107,7 +98,6 @@ a {
 .btn {
     padding: 0.8rem 2rem;
     border-radius: 4px;
-    /* Sharper corners for enterprise look */
     font-weight: 500;
     letter-spacing: 0.02em;
     transition: var(--transition);
@@ -145,14 +135,14 @@ a {
 }
 
 .hero-slide-content {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     position: absolute;
     inset: 0;
     display: flex;
     align-items: center;
 }
 
-/* ===== Product Cards (Minimalist) ===== */
+/* ===== Product Cards ===== */
 .card {
     border: none;
     background: var(--bg-white);
@@ -179,7 +169,7 @@ a {
 }
 
 .card-body {
-    padding: 1.5rem;
+    padding: 2rem;
     text-align: center;
 }
 
@@ -257,4 +247,77 @@ html,
 body {
     max-width: 100%;
     overflow-x: hidden;
+}
+
+/* ===== STRUCTURE & SPACING IMPROVEMENTS ===== */
+
+/* Add container padding to pages without it */
+.row.g-4:first-child {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1320px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+/* Improve card body spacing */
+.card-body {
+    padding: 2rem !important;
+}
+
+/* Product cards need more breathing room */
+.product-card .card-body {
+    padding: 1.5rem !important;
+}
+
+/* Filter sidebar spacing */
+.card.sticky-top {
+    padding: 2rem !important;
+}
+
+/* Section spacing */
+.container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+section,
+.mb-5 {
+    margin-bottom: 4rem !important;
+}
+
+/* Admin panel container fix */
+.admin-content {
+    padding: 2rem;
+}
+
+/* Cart empty state centering */
+.text-center.py-5 {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Form spacing */
+.form-label {
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+.mb-4 {
+    margin-bottom: 2rem !important;
+}
+
+/* Ensure proper spacing for shop page */
+@media (min-width: 992px) {
+
+    .col-lg-3,
+    .col-lg-9 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }
